@@ -6,6 +6,7 @@ import (
 	"go-web/demo1"
 	"go-web/demo2"
 	"go-web/demo3"
+	"go-web/demo4"
 )
 
 // 程序入口函数 main
@@ -28,8 +29,12 @@ func main() {
 	}
 
 	if demoType == "demo3" {
-		// 测试 web api
+		// web api 测试： form 提交，文件上传
 		demo3.TestDemo31()
+	}
+	if demoType == "demo4" {
+		// web api: db 数据库操作
+		demo4.TestDemo41()
 	}
 
 }
