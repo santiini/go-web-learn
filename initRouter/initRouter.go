@@ -2,20 +2,22 @@ package initrouter
 
 import (
 	"go-web/handler"
-	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
-
-func retHelloGinAndMethod(context *gin.Context) {
-	context.String(http.StatusOK, "hello gin "+strings.ToLower(context.Request.Method)+" method")
-}
 
 // SetupRouter 注册路由
 func SetupRouter() *gin.Engine {
 	// engine 的生成和使用过程
 	r := gin.Default()
+
+	// 模板渲染: LoadHTMLGlob 使用 templates/ 下的模板
+	// 根据 mode 加载不同的路径
+	if mode := gin.Mode(); mode == gin.TestMode {
+		r.LoadHTMLGlob("./../templates/*")
+	} else {
+		r.LoadHTMLGlob("templates/*")
+	}
 
 	/*
 		路由分组
@@ -25,24 +27,7 @@ func SetupRouter() *gin.Engine {
 
 	index := r.Group("/")
 	{
-		// 注册路由
-		// gin.Context 集合了 request, Params 等的属性和方法
-		// index.GET("/", retHelloGinAndMethod)
-		// post
-		// index.POST("/", retHelloGinAndMethod)
-		// put
-		// index.PUT("/", retHelloGinAndMethod)
-		// delete
-		// index.DELETE("/", retHelloGinAndMethod)
-		// post
-		// index.PATCH("/", retHelloGinAndMethod)
-		// Head
-		// index.HEAD("/", retHelloGinAndMethod)
-		// Options
-		// index.OPTIONS("/", retHelloGinAndMethod)
-
-		// demo1: 路由的方法 Any 替代了所有的路由方法
-		index.Any("", retHelloGinAndMethod)
+		index.Any("", handler.Index)
 	}
 
 	userRoute := r.Group("/user")
