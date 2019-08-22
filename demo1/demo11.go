@@ -10,6 +10,7 @@ import (
 func TestDemo11() {
 	test11()
 	test12()
+	test13()
 }
 
 // 返回的 struct
@@ -69,4 +70,33 @@ func test12() {
 	}
 	os.Stdout.Write(b)
 	fmt.Println()
+}
+
+// demo3 struct --> json 解析大小写的问题, 使用 struct tag
+func test13() {
+	type ReturnObj struct {
+		Status string      `json:"id"`
+		Code   int         `json:"code"`
+		Data   interface{} `json:"data"`
+	}
+
+	data1 := ReturnObj{
+		Status: "success",
+		Code:   200,
+		Data:   []string{"first", "second", "third"},
+	}
+
+	res, err := json.Marshal(data1)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(data1)
+	fmt.Println(res)
+
+	data1.Code = 204
+	fmt.Println(data1)
+	fmt.Println(res)
 }

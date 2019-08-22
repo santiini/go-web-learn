@@ -5,15 +5,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
 // TestDemo21 web api
 func TestDemo21() {
-	http.HandleFunc("/", sayHello)
 	http.HandleFunc("/map", writeMap)
 	http.HandleFunc("/format", formatResponse)
 	http.HandleFunc("/json", writeJSON)
+	http.HandleFunc("/struct1", structJSON1)
+	http.HandleFunc("/struct2", structJSON2)
+	http.HandleFunc("/struct3", structJSON3)
+	http.HandleFunc("/", sayHello)
+	fmt.Println("server starts at http://localhost:8008")
 	// 设置监听端口
 	err := http.ListenAndServe(":8008", nil)
 	if err != nil {
@@ -139,4 +144,90 @@ func writeJSON(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(res)
+}
+
+// 返回方式1： Fprintln, 可以用于 string, map, 不能使用 json 返回
+func structJSON1(w http.ResponseWriter, r *http.Request) {
+	type ReturnObj struct {
+		Status string      `json:"id"`
+		Code   int         `json:"code"`
+		Data   interface{} `json:"data"`
+	}
+
+	data1 := ReturnObj{
+		Status: "success",
+		Code:   200,
+		Data:   []string{"first", "second", "third"},
+	}
+
+	res, err := json.Marshal(data1)
+
+	if err != nil {
+		http.Error(w, "json parse error", http.StatusNoContent)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	// os 输出信息
+	os.Stdout.Write(res)
+	// struct 简单信息
+	fmt.Printf("\n%v\n", data1)
+	// struct 完整信息
+	fmt.Printf("%+v\n", data1)
+
+	// Fprintln: 打印信息，并且使用 writer.Write() 写入
+	// fmt.Fprintln(w, data1) // 只是 struct
+	fmt.Fprintln(w, res) // 输出信息不对
+}
+
+// 方式2： 使用 json.NewEncoder(w).Encode() 输出 json
+func structJSON2(w http.ResponseWriter, r *http.Request) {
+	type ReturnObj struct {
+		Status string      `json:"id"`
+		Code   int         `json:"code"`
+		Data   interface{} `json:"data"`
+	}
+
+	data1 := ReturnObj{
+		Status: "success",
+		Code:   200,
+		Data:   []string{"first", "second", "third"},
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if err := json.NewEncoder(w).Encode(data1); err != nil {
+		http.Error(w, "Parse json error", 500)
+	}
+}
+
+// 方式3： 使用 http.ResponseWriter.Write() 输出标准流
+func structJSON3(w http.ResponseWriter, r *http.Request) {
+	type ReturnObj struct {
+		Status string      `json:"id"`
+		Code   int         `json:"code"`
+		Data   interface{} `json:"data"`
+	}
+
+	data1 := ReturnObj{
+		Status: "success",
+		Code:   200,
+		Data:   []string{"first", "second", "third"},
+	}
+
+	res, err := json.Marshal(data1)
+
+	if err != nil {
+		http.Error(w, "json parse error", http.StatusNoContent)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	// os 输出信息
+	os.Stdout.Write(res)
+
+	// http.ResponseWriter.Write
+	w.Write(res)
 }
