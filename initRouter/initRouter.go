@@ -2,9 +2,14 @@ package initrouter
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
+
+func retHelloGinAndMethod(context *gin.Context) {
+	context.String(http.StatusOK, "hello gin "+strings.ToLower(context.Request.Method)+" method")
+}
 
 // SetupRouter 注册路由
 func SetupRouter() *gin.Engine {
@@ -13,35 +18,20 @@ func SetupRouter() *gin.Engine {
 
 	// 注册路由
 	// gin.Context 集合了 request, Params 等的属性和方法
-	r.GET("/", func(c *gin.Context) {
-		// 原理上，利用 w.writer 生成 json 返回结果
-		c.String(http.StatusOK, "hello gin")
-	})
+	r.GET("/", retHelloGinAndMethod)
 
 	// post
-	r.POST("/", func(context *gin.Context) {
-		context.String(http.StatusOK, "hello gin post method")
-	})
+	r.POST("/", retHelloGinAndMethod)
 	// put
-	r.PUT("/", func(context *gin.Context) {
-		context.String(http.StatusOK, "hello gin put method")
-	})
+	r.PUT("/", retHelloGinAndMethod)
 	// delete
-	r.DELETE("/", func(context *gin.Context) {
-		context.String(http.StatusOK, "hello gin delete method")
-	})
+	r.DELETE("/", retHelloGinAndMethod)
 	// post
-	r.PATCH("/", func(context *gin.Context) {
-		context.String(http.StatusOK, "hello gin patch method")
-	})
+	r.PATCH("/", retHelloGinAndMethod)
 	// Head
-	r.HEAD("/", func(context *gin.Context) {
-		context.String(http.StatusOK, "hello gin head method")
-	})
+	r.HEAD("/", retHelloGinAndMethod)
 	// Options
-	r.OPTIONS("/", func(context *gin.Context) {
-		context.String(http.StatusOK, "hello gin options method")
-	})
+	r.OPTIONS("/", retHelloGinAndMethod)
 
 	return r
 }

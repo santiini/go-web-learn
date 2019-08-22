@@ -20,7 +20,7 @@ func TestIndexGetRouter(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, "hello gin", w.Body.String())
+	assert.Equal(t, "hello gin get method", w.Body.String())
 }
 
 // router("/") post 测试
