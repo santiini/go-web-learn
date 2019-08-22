@@ -19,6 +19,12 @@ func SetupRouter() *gin.Engine {
 		r.LoadHTMLGlob("templates/*")
 	}
 
+	// static 静态文件的加载, 指定 /statics 路由映射到 ./statics 文件目录，可以映射图片等资源
+	r.Static("/statics", "./statics")
+
+	// 指定 .ico 图片
+	r.StaticFile("/favicon.ico", "./../favicon.ico")
+
 	/*
 		路由分组
 			1. 相同逻辑的代码集中处理
