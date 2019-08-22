@@ -21,3 +21,8 @@ func TestIndexGetRouter(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, "hello gin", w.Body.String())
 }
+
+/*
+	运行测试用例
+	  1. 在项目根目录，执行 go test -v ./test
+*/

@@ -8,5 +8,5 @@ func main() {
 	router := initRouter.SetupRouter()
 
 	// 启动程序，最终调用 http.ListenAndServe
-	router.Run(":8010")
+	_ = router.Run(":8010")
 }
