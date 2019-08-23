@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"fmt"
+	"go-web/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -25,8 +27,16 @@ func UserSaveByQuery(context *gin.Context) {
 
 // UserRegister 注册用户, DefaultPostForm 可以设置默认值
 func UserRegister(context *gin.Context) {
-	email := context.PostForm("email")
-	password := context.DefaultPostForm("password", "Wa123456")
-	passwordAgain := context.DefaultPostForm("password-again", "Wa123456")
-	println("email", email, "password", password, "password again", passwordAgain)
+	// email := context.PostForm("email")
+	// password := context.DefaultPostForm("password", "Wa123456")
+	// passwordAgain := context.DefaultPostForm("password-again", "Wa123456")
+	// println("email", email, "password", password, "password again", passwordAgain)
+
+	// 利用 UserModel
+	var user model.UserModel
+	if err := context.ShouldBind(&user); err != nil {
+		fmt.Println("err -->", err.Error())
+		return
+	}
+	println("email", user.Email, "password", user.Password, "password again", user.PasswordAgain)
 }

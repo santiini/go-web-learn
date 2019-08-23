@@ -83,3 +83,15 @@ func UserRegister(t *testing.T) {
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
 }
+
+func TestUserPostFormEmailErrorAndPasswordError(t *testing.T) {
+	value := url.Values{}
+
+	value.Add("email", "xiaotao")
+	value.Add("password", "123456")
+	value.Add("password-again", "qwer")
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest(http.MethodPost, "/user/register", bytes.NewBufferString(value.Encode()))
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
+}
