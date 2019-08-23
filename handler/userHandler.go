@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"fmt"
 	"go-web/model"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -35,8 +35,16 @@ func UserRegister(context *gin.Context) {
 	// 利用 UserModel
 	var user model.UserModel
 	if err := context.ShouldBind(&user); err != nil {
-		fmt.Println("err -->", err.Error())
-		return
+		// fmt.Println("err -->", err.Error())
+
+		// update: 使用 Log 取代 fmt.Println 打印日志信息
+		log.Println("err ->", err.Error())
+		context.String(http.StatusBadRequest, "输入的数据不合法")
+	} else {
+		// println("email", user.Email, "password", user.Password, "password again", user.PasswordAgain)
+
+		log.Println("email", user.Email, "password", user.Password, "password again", user.PasswordAgain)
+		// update: 对路由进行了重定向，将页面转跳到首页。
+		context.Redirect(http.StatusMovedPermanently, "/")
 	}
-	println("email", user.Email, "password", user.Password, "password again", user.PasswordAgain)
 }
