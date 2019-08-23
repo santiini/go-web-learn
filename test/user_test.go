@@ -1,9 +1,11 @@
 package test
 
 import (
+	"bytes"
 	initRouter "go-web/initRouter"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strconv"
 	"testing"
 
@@ -63,4 +65,21 @@ func TestUserSaveQueryNoAge(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, "用户:"+username+",年龄:20已经保存", w.Body.String())
+}
+
+// UserRegister router("/user/register") post
+func UserRegister(t *testing.T) {
+	value := url.Values{}
+	router := initRouter.SetupRouter()
+
+	value.Add("email", "xiaotao@gmail.com")
+	value.Add("password", "123456")
+	value.Add("password-again", "123456")
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest(http.MethodPost, "/user/register", bytes.NewBufferString(value.Encode()))
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded; param=value")
+
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
 }

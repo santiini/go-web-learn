@@ -39,6 +39,7 @@ func SetupRouter() *gin.Engine {
 	userRoute := r.Group("/user")
 	{
 		// demo2 路由的参数
+		userRoute.POST("/register", handler.UserRegister)
 		userRoute.GET("/:name", handler.UserSave)
 		userRoute.GET("", handler.UserSaveByQuery)
 	}
